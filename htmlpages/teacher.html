@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <title>Teacher</title>
+    </head>
+    <body>
+        <canvas style="display:none;" id="preview"></canvas>
+    <video id="video" width="720" height="560" autoplay muted></video>
+    </body>
+    <script defer>
+        var FPS=10
+        var canvas = document.getElementById("preview");
+        var context = canvas.getContext("2d");
+
+        canvas.width = 320;
+        canvas.height = 240;
+
+        context.width = canvas.width;
+        context.height = canvas.height;
+        const video =document.getElementById('video')
+        navigator.getUserMedia(
+            {video:{}},
+            stream => {video.srcObject =stream;console.log(stream)},
+            err => Console.console.error(err)
+        )
+
+        
+        const socket=io.connect("http://localhost:3000/")
+        setInterval(()=>{
+            context.drawImage(video,0,0,context.width, context.height);
+            socket.emit("stream",canvas.toDataURL('image/jpg'));
+        },1000/FPS)
+
+    </script>
+</html>

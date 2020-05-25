@@ -4,7 +4,7 @@
   "description": "a test for video stream",
   "main": "main.js",
   "scripts": {
-    "test": "echo hi"
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
