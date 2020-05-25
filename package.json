@@ -1,0 +1,23 @@
+{
+  "name": "videostream",
+  "version": "0.0.1",
+  "description": "a test for video stream",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo hi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rezaAzimi1/videoStream.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rezaAzimi1/videoStream/issues"
+  },
+  "homepage": "https://github.com/rezaAzimi1/videoStream#readme",
+  "dependencies": {
+    "express.js": "^1.0.0",
+    "socket.io": "^2.3.0"
+  }
+}
