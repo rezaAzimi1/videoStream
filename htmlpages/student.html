@@ -6,16 +6,14 @@
         <title>Student</title>
     </head>
     <body>
-        <img id="image" width="720" height="560"> 
-        
+        <img id="image" width="720" height="560">    
     </body>
     <script>
         const socket=io.connect("http://localhost:3000/")
-        socket.on("image",(data)=>{
+        socket.on("streamimage",(data)=>{
             const imageElm=document.querySelector("#image")
             imageElm.src=data
         })
-        socket.emit("stream","sadadadada")
 
     </script>
 </html>
