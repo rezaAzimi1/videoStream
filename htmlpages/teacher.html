@@ -3,11 +3,23 @@
     <head>
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <style>
+        .controller{
+            width:33%
+        }
+        #video{
+            width: 100%;
+        }
+    </style>
     <title>Teacher</title>
     </head>
     <body>
-        <canvas style="display:none;" id="preview"></canvas>
-    <video id="video" width="720" height="560" autoplay muted></video>
+        <button class="controller" id="stop" disabled>stop stream</button>
+        <button class="controller" id="startcamera">start camera stream</button>
+        <button class="controller" id="startdisplay">start display stream</button>
+        <hr>
+        <canvas hidden style="display:none;" id="preview"></canvas>
+        <video id="video" width="720" height="560" autoplay></video>
     </body>
     <script defer>
         var canvas = document.getElementById("preview");
@@ -16,19 +28,61 @@
         canvas.width = 320;
         canvas.height = 240;
         context.width = canvas.width;
-        context.height = canvas.height;     
+        context.height = canvas.height;  
+
         //An offline video stream is created and displayed in the video tag
         const video =document.getElementById('video')
-        navigator.getUserMedia(
-            {video:{}},
-            (stream) => {
-                video.srcObject =stream;
+        const startCameraButton=document.getElementById('startcamera')
+        const startDisplayButton=document.getElementById('startdisplay')
+        const stopButton=document.getElementById('stop')
+        stopButton.addEventListener("click",()=>{
+            stopCapture();
+            stopButton.disabled=true;
+        },false)
+        startCameraButton.addEventListener("click",()=>{
+            stopCapture();
+            cameraCapture();
+            stopButton.disabled=false;
+        },false)
+        startDisplayButton.addEventListener("click",()=>{
+            stopCapture();
+            displayCapture();
+            stopButton.disabled=false;
+        },false)
+
+        function cameraCapture(){
+            var displayMediaOptions ={
+                audio:{}
+                ,video:{}
+            };
+            navigator.getUserMedia(
+                {audio:{},video:{}},
+                (stream) => {
+                    video.srcObject =stream;
+                },
+                (err) => {
+                    console.error(err)
+                }
+            )
+        }
+        //cameraCapture()
+        async function displayCapture(){
+            var displayMediaOptions = {
+            video: {
+                cursor: "always"
             },
-            (err) => {
-                console.error(err)
-            }
-        )
-        //
+            audio: false
+            };
+            video.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+        }
+        function stopCapture(evt) {
+            try{
+            var tracks = video.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            }catch(e){}
+            video.srcObject = null;
+        } 
+
         const socket=io.connect("http://localhost:3000/")
         //Set the frame rate per second here
         var FPS=10
